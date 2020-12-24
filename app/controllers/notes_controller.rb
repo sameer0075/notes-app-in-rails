@@ -1,12 +1,19 @@
 class NotesController < ApplicationController
+
   before_action :set_note, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!, except: [:index, :show]
+
+
 
   # GET /notes
   # GET /notes.json
   def index
-    @notes = Note.all
+    @notes = Note.where(status: 'public')
   end
+
+  # def checkPrivateNotes
+  #     @notes = Note.where(status:"private",user:Note.user)
+  # end
 
   # GET /notes/1
   # GET /notes/1.json
@@ -41,6 +48,7 @@ class NotesController < ApplicationController
   # PATCH/PUT /notes/1
   # PATCH/PUT /notes/1.json
   def update
+    @note.user = current_user
     respond_to do |format|
       if @note.update(note_params)
         format.html { redirect_to @note, notice: 'Note was successfully updated.' }
